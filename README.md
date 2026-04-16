@@ -1,6 +1,6 @@
 # API REST - Gerenciamento de Livros e Autores
 
-Uma API REST completa e profissional para gerenciamento de livros e autores, desenvolvida com Node.js, Express e SQLite. Inclui autenticação JWT, relacionamentos entre entidades, validações robustas e documentação completa.
+Uma API REST completa e profissional para gerenciamento de livros e autores, desenvolvida com Node.js, Express e SQLite. Inclui autenticação JWT, relacionamentos entre entidades, validações e documentação completa.
 
 ## Objetivo
 
