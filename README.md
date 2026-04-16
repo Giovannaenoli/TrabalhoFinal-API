@@ -76,8 +76,8 @@ API de Livros pronta para uso!
 **Body (JSON):**
 ```json
 {
-  "nome": "João Silva",
-  "email": "joao@example.com",
+  "nome": "Tiago Galvão",
+  "email": "tiago@example.com",
   "senha": "senha123"
 }
 ```
