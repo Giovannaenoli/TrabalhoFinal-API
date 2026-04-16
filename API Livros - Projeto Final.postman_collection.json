@@ -1,0 +1,473 @@
+{
+  "info": {
+    "_postman_id": "0c0edf61-f0aa-4ba1-99e2-87b761740e75",
+    "name": "API Livros - Projeto Final",
+    "description": "Collection completa para testar a API de Livros, incluindo autenticação JWT e exemplos para todos os métodos (GET, POST, PUT, DELETE).",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53429505",
+    "_collection_link": "https://go.postman.co/collection/53429505-0c0edf61-f0aa-4ba1-99e2-87b761740e75?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Autenticação",
+      "item": [
+        {
+          "name": "1. Registrar Novo Usuário",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Giovanna Teste\",\n  \"email\": \"giovanna.teste@email.com\",\n  \"senha\": \"senha123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            },
+            "description": "Cria um novo usuário. Use um email diferente a cada vez ou delete o usuário antes de tentar registrar novamente."
+          },
+          "response": []
+        },
+        {
+          "name": "2. Fazer Login (Obter Token JWT)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.environment.set(\"token\", jsonData.token);",
+                  "console.log(\"Token JWT obtido e salvo na variável de ambiente: \" + pm.environment.get(\"token\"));"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"giovanna.teste@email.com\",\n  \"senha\": \"senha123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            },
+            "description": "Faz login com um usuário existente e salva o token JWT em uma variável de ambiente do Postman ({{token}})."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Livros",
+      "item": [
+        {
+          "name": "1. GET - Listar Todos os Livros (Sem Filtros)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/livros",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "livros"
+              ]
+            },
+            "description": "Retorna todos os livros com informações do autor."
+          },
+          "response": []
+        },
+        {
+          "name": "2. GET - Listar Livros com Filtros, Ordenação e Paginação",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/livros?search=love&genero=Romance&autor_id=1&sort_by=preco&order=desc&page=1&limit=5",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "livros"
+              ],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "love",
+                  "description": "Busca por título, gênero ou nome do autor"
+                },
+                {
+                  "key": "genero",
+                  "value": "Romance",
+                  "description": "Filtrar por gênero específico"
+                },
+                {
+                  "key": "autor_id",
+                  "value": "1",
+                  "description": "Filtrar por ID do autor (ex: 1 para Ali Hazelwood)"
+                },
+                {
+                  "key": "sort_by",
+                  "value": "preco",
+                  "description": "Campo para ordenação (titulo, preco, ano_publicacao, estoque, autorNome)"
+                },
+                {
+                  "key": "order",
+                  "value": "desc",
+                  "description": "Ordem (asc ou desc)"
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "description": "Número da página (padrão: 1)"
+                },
+                {
+                  "key": "limit",
+                  "value": "5",
+                  "description": "Itens por página (padrão: 10)"
+                }
+              ]
+            },
+            "description": "Exemplo de como usar todos os filtros, ordenação e paginação. Ajuste os parâmetros conforme necessário."
+          },
+          "response": []
+        },
+        {
+          "name": "3. GET - Buscar Livro por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/livros/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "livros",
+                "1"
+              ]
+            },
+            "description": "Retorna os detalhes de um livro específico pelo seu ID."
+          },
+          "response": []
+        },
+        {
+          "name": "4. POST - Criar Novo Livro (Protegido)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "description": "Token JWT obtido no login",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"O Novo Livro da Giovanna\",\n  \"autor_id\": 1,\n  \"genero\": \"Ficção Científica\",\n  \"ano_publicacao\": 2025,\n  \"preco\": 60.00,\n  \"estoque\": 30\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/livros",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "livros"
+              ]
+            },
+            "description": "Cria um novo livro. Requer autenticação JWT. Certifique que o autor_id exista."
+          },
+          "response": []
+        },
+        {
+          "name": "5. PUT - Atualizar Livro (Protegido)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"titulo\": \"O Livro Atualizado da Giovanna\",\n  \"preco\": 65.50,\n  \"estoque\": 25\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/livros/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "livros",
+                "1"
+              ]
+            },
+            "description": "Atualiza um livro existente pelo ID. Requer autenticação JWT. Envie apenas os que deseja atualizar."
+          },
+          "response": []
+        },
+        {
+          "name": "6. DELETE - Deletar Livro (Protegido)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/livros/33",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "livros",
+                "33"
+              ]
+            },
+            "description": "Deleta um livro pelo ID. Requer autenticação JWT. Use um ID de um livro que você criou ou que não seja essencial para os dados iniciais."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Autores",
+      "item": [
+        {
+          "name": "1. GET - Listar Todos os Autores",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/autores",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "autores"
+              ]
+            },
+            "description": "Retorna todos os autores cadastrados."
+          },
+          "response": []
+        },
+        {
+          "name": "2. GET - Buscar Autor por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/api/autores/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "autores",
+                "1"
+              ]
+            },
+            "description": "Retorna os detalhes de um autor específico pelo seu ID."
+          },
+          "response": []
+        },
+        {
+          "name": "3. POST - Criar Novo Autor (Protegido)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Autor Teste Giovanna\",\n  \"nacionalidade\": \"Brasileira\",\n  \"data_nascimento\": \"1995-01-01\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/autores",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "autores"
+              ]
+            },
+            "description": "Cria um novo autor. Requer autenticação JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "4. PUT - Atualizar Autor (Protegido)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nacionalidade\": \"Portuguesa\",\n  \"data_nascimento\": \"1990-05-05\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/api/autores/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "autores",
+                "1"
+              ]
+            },
+            "description": "Atualiza um autor existente pelo ID. Requer autenticação JWT. Envie apenas os campos que deseja atualizar."
+          },
+          "response": []
+        },
+        {
+          "name": "5. DELETE - Deletar Autor (Protegido)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text"
+              }
+            ],
+            "url": {
+              "raw": "http://localhost:3000/api/autores/11",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "api",
+                "autores",
+                "11"
+              ]
+            },
+            "description": "Deleta um autor pelo ID. Requer autenticação JWT. **ATENÇÃO:** Não é possível deletar um autor que tenha livros associados. Crie um novo autor e delete para testar."
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Para usar as variáveis de ambiente, crie uma variável chamada 'token' no seu ambiente do Postman."
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "// Este script é executado após cada requisição."
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "token",
+      "value": "",
+      "type": "string",
+      "description": "Variável para armazenar o token JWT. Será preenchida automaticamente após o login."
+    }
+  ]
+}
